@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短網址服務</title>
+</head>
+<body>
+    <h1>短網址生成器</h1>
+    <form id="shorten-form">
+        <input type="url" id="long-url" placeholder="輸入長網址" required>
+        <button type="submit">生成短網址</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        const form = document.getElementById('shorten-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const longUrl = document.getElementById('long-url').value;
+            const response = await fetch('<YOUR_CLOUDFLARE_WORKER_URL>/shorten', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: longUrl })
+            });
+            const data = await response.json();
+            document.getElementById('result').innerHTML = `<p>短網址: <a href="${data.short_url}" target="_blank">${data.short_url}</a></p>`;
+        });
+    </script>
+</body>
+</html>
